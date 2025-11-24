@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>크로스파이어 웨이브 모드 역기획서</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .section-header {
+            border-left: 5px solid #ff4500;
+            padding-left: 1rem;
+        }
+        .card {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+        }
+        .table-header-bg {
+            background-color: #2c2c2c;
+            color: #ffffff;
+        }
+        .text-accent {
+            color: #ff4500;
+        }
+        .cover-page {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 10vh 0;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+        .cover-title-block {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        .cover-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+        }
+        .cover-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #a0a0a0;
+            margin-top: 0.5rem;
+        }
+        .cover-purpose-box {
+            background-color: #1e1e1e;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 0.5rem;
+            border-left: 5px solid #ff4500;
+            color: #e5e5e5;
+            font-size: 0.9rem;
+            text-align: left;
+            align-self: flex-end;
+            margin-right: 5%;
+        }
+        .cover-purpose-heading {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ff4500;
+            margin-bottom: 0.5rem;
+        }
+        .svg-map-container {
+            border: 2px solid #ff4500;
+            border-radius: 0.5rem;
+            background-color: #0d0d0d;
+            padding: 0.5rem;
+            margin: 1rem auto;
+            max-width: 800px;
+        }
+        .lane-path {
+            stroke: #a0a0a0;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+        .base-rect-A {
+            fill: #001a33;
+            stroke: #1e90ff;
+            stroke-width: 2;
+        }
+        .tower-point.team-A {
+            fill: #1e90ff;
+            stroke: #ffffff;
+            stroke-width: 1;
+        }
+
+        .base-rect-B {
+            fill: #330000;
+            stroke: #ff3b30;
+            stroke-width: 2;
+        }
+        .tower-point.team-B {
+            fill: #ff3b30;
+            stroke: #ffffff;
+            stroke-width: 1;
+        }
+
+        .jungle-rect {
+            fill: #181818;
+            opacity: 0.9;
+            stroke: #606060;
+            stroke-dasharray: 4;
+        }
+
+        .label-text {
+            font-size: 10px;
+            font-weight: 600;
+            fill: #E0E0E0;
+        }
+        .lane-text {
+            fill: #ff4500;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .base-text {
+            fill: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .image-placeholder {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(255, 69, 0, 0.2);
+        }
+        @page {
+            margin: 1cm !important;
+        }
+        .new-page {
+            page-break-before: always !important;
+        }
+        .no-break {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body, .cover-page {
+                background-color: #121212 !important;
+                color: #E0E0E0 !important;
+            }
+            .card, .cover-purpose-box {
+                background-color: #1e1e1e !important;
+            }
+            .text-accent, .cover-purpose-heading {
+                color: #ff4500 !important;
+            }
+            .section-header {
+                border-left-color: #ff4500 !important;
+            }
+            .table-header-bg {
+                background-color: #2c2c2c !important;
+                color: #ffffff !important;
+            }
+            .cover-page {
+                height: 100vh !important;
+            }
+            .container {
+                margin: 0 auto !important;
+            }
+            .base-rect-A { fill: #001a33 !important; }
+            .base-rect-B { fill: #330000 !important; }
+            .jungle-rect { fill: #181818 !important; }
+            .tower-point.team-A { fill: #1e90ff !important; }
+            .tower-point.team-B { fill: #ff3b30 !important; }
+        }
+    </style>
+</head>
+<body>
+    <section class="cover-page">
+        <div class="cover-title-block p-4">
+            <h1 class="cover-title">
+                크로스파이어 <span class="text-accent">웨이브 모드</span> 역기획서
+            </h1>
+            <p class="cover-subtitle">AOS 기반 PvPvE 공성전 (Reverse Design Document)</p>
+        </div>
+
+        <div class="cover-purpose-box">
+            <p class="cover-purpose-heading">문서 개요 및 목적</p>
+            <p class="text-gray-300">
+                이 <span class="font-bold">역기획서 (Reverse Design Document)</span>는 ㈜스마일게이트의 <span class="font-bold">크로스파이어 웨이브 모드</span>를 <span class="font-bold">심층 분석</span>한 결과물입니다. <span class="font-bold">취업 준비생 박환호</span>가 <span class="font-bold">콘텐츠 기획 직무</span> <span class="font-bold">포트폴리오</span>를 위해 제작했으며, <span class="font-bold">기존 콘텐츠 분석 및 이해 능력</span>을 효과적으로 제시하는 것을 목표로 합니다.
+            </p>
+            <p class="text-gray-500 mt-2 text-xs">작성일: 2025. 11.</p>
+        </div>
+    </section>
+    <div class="container mx-auto p-4 md:p-8 new-page">
+        <section class="mb-10 p-6 card rounded-xl ">
+            <h2 class="text-3xl font-bold mb-4 section-header">1. 프로젝트 개요 (Project Overview)</h2>
+            <p class="text-sm text-gray-400 italic mb-4">
+                클래스 기반 FPS의 슈팅 쾌감과 3라인 AOS의 전략적 성장을 결합한 하이브리드 모드.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 no-break">
+                <div>
+                    <p class="text-xl font-semibold mb-2"><span class="text-accent">1.1. 모드명:</span> 웨이브 모드 (Wave Mode)</p>
+                    <p class="text-xl font-semibold mb-4"><span class="text-accent">1.2. 장르:</span> AOS 기반 FPS PvPvE (클래스 기반, 기지 파괴)</p>
+                </div>
+                <div class="border-l border-gray-700 md:pl-6">
+                    <h3 class="text-xl font-semibold mb-2"><span class="text-accent">1.4. 모드 핵심 컨셉:</span> FPS + AOS의 결합</h3>
+                    <p class="text-sm text-gray-400 italic mb-4">FPS의 타격감과 AOS의 전략적 성장을 융합하여 새로운 유형의 공성전을 경험하게 합니다.</p>
+                    <p class="text-gray-400">
+                        플레이어는 FPS의 타격감과 조작감을 유지하며, AOS 장르의 레벨링, 타워 파괴, 병사 웨이브 관리를 통해 상대 진영의 본진을 파괴하는 것을 목표로 합니다.
+                    </p>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold mt-6 mb-2"><span class="text-accent">1.3. 기획 의도</span></h3>
+            <p class="text-sm text-gray-400 italic mb-4">클래스 기반의 역할 분담과 입체적인 전장 활용을 통해 전략적인 팀 플레이를 유도합니다.</p>
+            <ul class="list-disc ml-6 space-y-2 text-gray-300 no-break">
+                <li><span class="font-medium text-white">성장의 재미:</span> 미니언 및 적 플레이어를 처치하며 캐릭터 레벨을 올리고, 강력한 특수 능력(F스킬)을 해제하며 성장하는 쾌감 제공.</li>
+                <li><span class="font-medium text-white">전략적 역할 분담:</span> 10가지 이상의 클래스 기반의 명확한 역할 분담을 통해 팀원 간의 협동이 승패에 결정적인 영향을 미치도록 설계.</li>
+                <li><span class="font-medium text-white">입체적 전장 활용:</span> 높낮이가 명확한 3차원 맵 디자인을 통해 단순한 라인 전투를 넘어선 은엄폐 및 공중 지원 등 전술적 다양성 부여.</li>
+            </ul>
+        </section>
+
+        <section class="mb-10 p-6 card rounded-xl new-page">
+            <h2 class="text-3xl font-bold mb-6 section-header">2. 모드 시스템 상세 기획 (Game Systems Flow)</h2>
+            
+            <div class="flow-chart-container p-4 bg-[#242424] rounded-lg shadow-inner mb-6 no-break">
+                <h4 class="text-xl font-semibold mb-4 text-accent border-b border-gray-600 pb-2">모드 시작 단계 흐름도 (Game Start Sequence Flow)</h4>
+                <div class="flex flex-col items-center space-y-3">
+                    <div class="flex flex-col items-center">
+                        <div class="px-4 py-2 bg-gray-600 text-white rounded-full font-bold text-sm">START: 게임 로비</div>
+                        <svg class="w-6 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/></svg>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="px-4 py-2 bg-[#3a3a3a] text-white rounded-lg text-sm font-medium">2.1 모드 선택 (웨이브 모드)</div>
+                        <svg class="w-6 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/></svg>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">매칭 시작: 팀 구성 대기</div>
+                        <svg class="w-6 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/></svg>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">매칭 완료</div>
+                        <svg class="w-6 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/></svg>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="px-4 py-2 bg-[#3a3a3a] text-white rounded-lg text-sm font-medium">2.2 클래스 선택 단계</div>
+                        <p class="text-xs text-gray-400 mt-1 italic">클래스 선택 완료 / 제한 시간 만료</p>
+                        <svg class="w-6 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 15l-5 5-5-5"/></svg>
+                    </div>
+
+                    <div class="flex flex-col items-center mt-3">
+                        <div class="px-4 py-2 bg-accent text-white rounded-full font-bold text-sm">게임 시작: 필드 진입</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2"><span class="text-accent">2.1. 모드 선택 단계 (Mode Selection Phase)</span></h3>
+            <p class="text-sm text-gray-400 italic mb-4">로비에서 모드를 선택하고 매칭이 완료되면 자동으로 클래스 선택 화면으로 전환됩니다.</p>
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] mb-6 no-break">
+                <p class="font-bold text-white mb-2">화면 레이아웃 개요: 로비 & 모드 선택 화면 </p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium">위치:</span> 게임 접속 후 메인 로비 화면의 '모드 선택' 섹션 내.</li>
+                    <li><span class="font-medium">표시 정보:</span> '웨이브 모드' 아이콘, 간략한 모드 설명, 현재 참여 가능한 맵 목록.</li>
+                </ul>
+                <p class="mt-3 text-gray-300"><span class="font-bold text-accent">시작 절차:</span> 플레이어가 '웨이브 모드' 아이콘을 선택하고 '매칭 시작' 버튼을 누르면 매칭이 시작됩니다. 매칭이 완료되면 자동으로 <span class="font-bold text-white">'2.2 클래스 선택 화면'</span>으로 전환됩니다.</p>
+            </div>
+
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 pt-2 border-b border-gray-700 pb-2 new-page"><span class="text-accent">2.2. 클래스 선택 단계 (Class Selection Phase)</span></h3>
+            <p class="text-sm text-gray-400 italic mb-4">각 플레이어는 역할에 맞는 클래스(예: 탱커, 딜러, 서포터)를 선택하여 팀 시너지를 구축합니다.</p>
+            
+            <div class="flex justify-center mb-6 no-break">
+                 <img src="https://placehold.co/800x450/1e1e1e/E0E0E0?text=클래스+선택+단계+UI+예시" alt="크로스파이어 웨이브 모드 클래스 선택 화면 예시" class="image-placeholder" onerror="this.onerror=null;this.src='https://placehold.co/800x450/1e1e1e/E0E0E0?text=클래스+선택+단계+UI+예시';"/>
+            </div>
+
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] mb-6 no-break">
+                <p class="font-bold text-white mb-2">화면 레이아웃 개요: 클래스 선택 화면 </p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium">클래스 나열:</span> 화면 중앙에 각 클래스별 <span class="font-bold text-white">카드 형태</span>의 아이콘이 나열됩니다. 카드를 선택하면 클래스 모델링 및 상세 설명(스킬, 무기)이 우측에 표시됩니다.</li>
+                    <li><span class="font-medium">팀원 정보:</span> 화면 상/하단에 아군(블루 팀)과 적군(레드 팀)의 유저 닉네임, 현재 선택한 클래스, 준비 상태가 실시간으로 출력됩니다.</li>
+                </ul>
+                <p class="mt-3 text-gray-300"><span class="font-bold text-accent">결정 및 시작:</span> 플레이어는 카드를 선택하여 자신의 클래스를 결정합니다. 모든 팀원이 클래스 선택을 완료하거나 <span class="font-bold text-white">제한 시간이 만료</span>되면 자동으로 게임이 시작됩니다.</p>
+            </div>
+            
+            <h4 class="text-xl font-semibold mb-3 pt-2 text-accent no-break new-page">2.2.1. 클래스 종류 및 구성 (핵심 10종)</h4>
+            <p class="text-sm text-gray-400 italic mb-4">팀의 전략적 깊이를 위해 10가지 이상의 고유한 역할과 특수 능력(F스킬)을 가진 클래스를 제공합니다.</p>
+            <div class="overflow-x-auto shadow-lg rounded-lg mb-4 no-break">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead>
+                        <tr class="table-header-bg text-left text-sm uppercase tracking-wider">
+                            <th class="p-3">클래스 (Class)</th>
+                            <th class="p-3">역할 (Role)</th>
+                            <th class="p-3">주요 임무</th>
+                            <th class="p-3">F스킬 (특수 능력) 상세</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">저거넛 (Juggernaut)</td>
+                            <td class="p-3 text-red-400">주력 탱커 / 돌파</td>
+                            <td class="p-3">최전방에서 피해를 흡수하고 적진 돌파의 선봉장 역할 수행.</td>
+                            <td class="p-3"><span class="font-bold">강화 방어:</span> 일정 시간 방어력 극대화 및 슈퍼 아머 부여.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">실드 (Shield)</td>
+                            <td class="p-3 text-green-400">방어 / 거점 보호</td>
+                            <td class="p-3">아군 보호 및 방어선 구축. 이동식 엄폐물 역할 수행.</td>
+                            <td class="p-3"><span class="font-bold">이동식 방패:</span> 전방에 강력한 투사체 방어막 설치.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">블래스터 (Blaster)</td>
+                            <td class="p-3 text-yellow-400">건물 파괴 / 포격</td>
+                            <td class="p-3">중화기를 사용하여 방어 타워, NPC 웨이브, 구조물 파괴에 집중.</td>
+                            <td class="p-3"><span class="font-bold">고폭 탄두 발사:</span> 광역 폭발 피해 및 건물/타워에 추가 치명타 대미지 적용.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">메딕 (Medic)</td>
+                            <td class="p-3 text-blue-400">지원 / 회복</td>
+                            <td class="p-3">아군 생존력 극대화 및 전선의 라인 유지력 책임.</td>
+                            <td class="p-3"><span class="font-bold">전술 치료 포트:</span> 설치 후 지속적으로 아군 체력 회복 및 디버프 해제.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">팬서 (Panther)</td>
+                            <td class="p-3 text-purple-400">원거리 지원 / 견제</td>
+                            <td class="p-3">장거리 포격이나 공중 지원을 요청하여 적의 움직임을 제약.</td>
+                            <td class="p-3"><span class="font-bold">정밀 포격 요청:</span> 지정 위치에 강력한 박격포/미사일 지원 요청.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">데몰리션 (Demolition)</td>
+                            <td class="p-3 text-yellow-400">폭파 / 라인 푸시</td>
+                            <td class="p-3">강력한 폭발물로 적 NPC 웨이브 및 1차 방어 시설을 빠르게 파괴.</td>
+                            <td class="p-3"><span class="font-bold">집중 C4 설치:</span> 일반 C4보다 강력한 폭발력으로 타워와 미니언에 대량 피해.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">막스맨 (Marksman)</td>
+                            <td class="p-3 text-cyan-400">장거리 딜러 / 저격</td>
+                            <td class="p-3">먼 거리에서 적 플레이어에게 치명적인 헤드샷 피해를 입혀 후방 지원.</td>
+                            <td class="p-3"><span class="font-bold">관통 사격:</span> 잠시 동안 무기에 관통 속성을 부여하여 여러 명의 적에게 대미지 전달.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">쇼크 (Shock)</td>
+                            <td class="p-3 text-fuchsia-400">암살 / 교란</td>
+                            <td class="p-3">은밀하게 적진에 침투하여 핵심 딜러를 암살하고 교란 유발.</td>
+                            <td class="p-3"><span class="font-bold">전자기 파동:</span> 짧은 거리 순간 이동하며 주변 적에게 전기 충격 및 이동/공격 속도 감소.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">헌터 (Hunter)</td>
+                            <td class="p-3 text-lime-400">근접 딜러 / 기동</td>
+                            <td class="p-3">빠른 기동력을 바탕으로 근접 전투를 수행하며 적의 후방 교란.</td>
+                            <td class="p-3"><span class="font-bold">돌진 베기:</span> 지정 방향으로 빠르게 돌진하여 경로상의 적에게 근접 피해.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">퍼지 (Fuzzy)</td>
+                            <td class="p-3 text-orange-400">탱커/파괴 지원</td>
+                            <td class="p-3">라인 파괴 및 보급 경쟁 지원. 에너지 실드와 탄도 폭발로 팀 지원.</td>
+                            <td class="p-3"><span class="font-bold">에너지 쉴드/볼:</span> (기본) 1회 공격 막는 실드. (Lv.5) 5회 튕기며 폭발하는 에너지 볼 발사.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 pt-2 border-b border-gray-700 pb-2 new-page"><span class="text-accent">2.3. 게임 진행 단계 (Game Progression Phase)</span></h3>
+            <p class="text-sm text-gray-400 italic mb-4 no-break">플레이어는 NPC 웨이브 관리, 타워 파괴, 오브젝트 점령을 통해 점수를 획득하며 최종 보스전을 준비합니다.</p>
+            
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] mb-6 no-break">
+                <p class="font-bold text-white mb-2">게임 단계 구성</p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium">웨이브 진행:</span> 맵 전체에 NPC 웨이브가 끊임없이 생성되며, 플레이어는 웨이브 관리, 타워 파괴, 오브젝트 점령을 수행합니다.</li>
+                    <li><span class="font-medium text-white">웨이브 클리어 조건:</span> 각 웨이브는 <span class="font-bold text-accent">특정 타워 파괴</span>, <span class="font-bold text-accent">전략 오브젝트 점령</span>, 또는 <span class="font-bold text-accent">제한 시간 내 적 플레이어 킬 달성</span> 등의 복합적인 목표를 클리어해야 다음 웨이브로 넘어갑니다.</li>
+                    <li><span class="font-medium text-white">최종 웨이브(보스전):</span> 모든 라인의 1차 타워가 파괴되거나 일정 시간이 경과하면, 최종 보스 몬스터가 등장하며 보스 몬스터 처치 시 큰 점수를 얻습니다.</li>
+                </ul>
+            </div>
+
+            <h4 class="text-xl font-semibold mt-6 mb-3 text-accent no-break">2.3.1. 성장 및 업그레이드 시스템 (In-Game)</h4>
+            <p class="text-sm text-gray-400 italic mb-4">NPC 처치로 경험치와 골드를 획득하고, 이를 통해 클래스 레벨 및 영구적인 능력치 보너스를 강화합니다.</p>
+            <div class="overflow-x-auto shadow-lg rounded-lg no-break">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead>
+                        <tr class="table-header-bg text-left text-sm uppercase tracking-wider">
+                            <th class="p-3">구분</th>
+                            <th class="p-3">메커니즘</th>
+                            <th class="p-3">상세 내용</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">레벨링</td>
+                            <td class="p-3">최대 레벨 20</td>
+                            <td class="p-3">NPC 처치, 플레이어 킬/어시스트, 오브젝트 파괴로 경험치(XP) 획득. 레벨 업 시 기본 능력치 및 F스킬 성능 강화.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">자원</td>
+                            <td class="p-3">골드 (GP)</td>
+                            <td class="p-3">NPC 및 적 플레이어 처치 시 획득. 베이스 캠프 상점에서 사용.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">강화 시스템</td>
+                            <td class="p-3">클래스 카드 강화</td>
+                            <td class="p-3">획득한 골드로 클래스 카드를 강화하여 영구적인 능력치 보너스 획득 (예: 스킬 재사용 대기시간 감소, 이동 속도 증가).</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3 font-medium text-white">강화 재료</td>
+                            <td class="p-3">안정제 카드 (Stabilizer)</td>
+                            <td class="p-3">클래스 카드와 함께 사용될 경우 100% 성공률 보장.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 class="text-xl font-semibold mt-6 mb-3 pt-2 text-accent no-break new-page">2.3.2. 화면 HUD 레이아웃 설계</h4>
+            <p class="text-sm text-gray-400 italic mb-4">플레이어의 실시간 전투 능력치와 게임의 핵심 진행 상황을 보여주는 UI/HUD 구성 요소입니다. (첨부된 이미지 기반 수정)</p>
+            
+            <!-- 요청하신 HUD 레이아웃 이미지 삽입 공간 -->
+            <div class="my-8 p-6 border-4 border-dashed border-sky-500 bg-[#0a1f33] rounded-xl text-center no-break shadow-2xl">
+                <p class="text-2xl font-extrabold text-sky-300 mb-2">HUD 레이아웃 다이어그램 삽입 공간</p>
+                <p class="text-lg text-sky-200 mb-4">웨이브 모드 HUD의 전체적인 시각적 레이아웃 와이어프레임을 표시할 영역입니다.</p>
+                <div class="w-full max-w-4xl mx-auto h-72 bg-gray-900/70 flex items-center justify-center rounded-lg border-2 border-gray-600 shadow-inner">
+                    <p class="text-2xl font-mono text-gray-400">[HUD 레이아웃 이미지 (Diagram/Screenshot) 영역]</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mt-6 text-sm text-left">
+                    <div class="p-3 bg-gray-800/50 rounded-lg">
+                        <p class="font-bold text-red-400 mb-1">좌상단 (전략 정보)</p>
+                        <ul class="list-disc ml-5 space-y-0.5 text-gray-300">
+                            <li>미니맵 / 전장 정보</li>
+                            <li>현재 웨이브 번호 및 남은 시간</li>
+                            <li>양 팀의 누적 점수</li>
+                        </ul>
+                    </div>
+                    <div class="p-3 bg-gray-800/50 rounded-lg">
+                        <p class="font-bold text-red-400 mb-1">우상단 (전투 로그)</p>
+                        <ul class="list-disc ml-5 space-y-0.5 text-gray-300">
+                            <li>킬/데스 로그 및 중요 이벤트 메시지</li>
+                        </ul>
+                    </div>
+                    <div class="col-span-2 p-3 bg-gray-800/50 rounded-lg">
+                        <p class="font-bold text-red-400 mb-1">중앙 하단 (핵심 전투 정보)</p>
+                        <ul class="list-disc ml-5 space-y-0.5 text-gray-300">
+                            <li>HP / SHIELD 게이지 (플레이어 생존 상태)</li>
+                            <li>F-Skill 아이콘 및 재사용 대기시간</li>
+                            <li>현재 무기 및 탄약 정보</li>
+                            <li>GP (골드) 잔액 표시</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] no-break">
+                <p class="font-bold text-white mb-2">주요 HUD 요소 상세 구성</p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium text-accent">좌측 하단 (개인 정보):</span> CLASS LV, GP, HP/SHIELD, F-Skill 쿨타임이 직관적으로 표시됩니다.</li>
+                    <li><span class="font-medium text-accent">화면 상단 중앙:</span> 전체 게임 시간, 현재 웨이브 진행도(퍼센트 또는 단계), 양 팀의 <span class="font-bold">누적 점수(스코어)</span>가 대칭으로 표시됩니다.</li>
+                    <li><span class="font-medium text-accent">화면 상단 좌/우:</span> 미니맵(아군, 타워, 오브젝트 위치)과 팀원 생존 상태가 간략하게 표시됩니다.</li>
+                    <li><span class="font-medium text-accent">화면 중앙 우측:</span> 획득 골드(GP) 및 경험치(XP) 로그, 중요 이벤트 메시지(예: 타워 파괴, 오브젝트 점령)가 표시됩니다.</li>
+                </ul>
+            </div>
+            
+            <h3 class="text-2xl font-bold mt-8 mb-4 pt-2 border-b border-gray-700 pb-2 new-page"><span class="text-accent">2.4. 결과 처리 단계 (Result Processing Phase)</span></h3>
+            <p class="text-sm text-gray-400 italic mb-4">베이스 캠프 파괴 또는 제한 시간 내 누적 점수 우위를 통해 승패가 결정되며, 기여도에 따라 보상이 차등 지급됩니다.</p>
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] mb-6 no-break">
+                <p class="font-bold text-white mb-2">결과 처리 조건 및 승패 결정</p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium text-white">즉시 승리 조건:</span> 상대 팀의 <span class="font-bold text-red-400">베이스 캠프</span>를 먼저 파괴하는 팀이 즉시 승리하며 결과 화면이 출력됩니다.</li>
+                    <li><span class="font-medium text-white">시간 만료 조건:</span> 정해진 모든 웨이브 및 최종 보스전이 종료된 시점까지 베이스 캠프가 파괴되지 않았다면, <span class="font-bold text-accent">누적 점수가 높은 팀</span>이 승리합니다.</li>
+                </ul>
+            </div>
+
+            <div class="p-4 border border-gray-700 rounded-lg bg-[#242424] mb-6 no-break">
+                <p class="font-bold text-white mb-2">결과 화면 및 보상 </p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-400">
+                    <li><span class="font-medium">레이아웃:</span> 화면 중앙에 "VICTORY" 또는 "DEFEAT" 애니메이션 출력. 양 팀의 K/D/A, 점수, 입힌 대미지, 파괴한 타워 수 등 상세 기록 표시.</li>
+                    <li><span class="font-medium text-accent">보상 획득:</span> 승패 및 개인 기여도에 따라 <span class="font-bold">경험치(EXP)</span>, <span class="font-bold">게임머니(GP)</span>, 그리고 <span class="font-bold">클래스 카드(강화 재료)</span>가 차등 지급됩니다.</li>
+                </ul>
+                <p class="mt-3 text-gray-300"><span class="font-bold text-accent">종료 후 이동:</span> 결과 확인 후, 플레이어는 '로비로 돌아가기' 버튼을 통해 <span class="font-bold text-white">메인 로비 화면</span>으로 복귀합니다.</p>
+            </div>
+            
+        </section>
+        
+        <section class="mb-10 p-6 card rounded-xl new-page">
+            <h2 class="text-3xl font-bold mb-6 section-header">3. 맵 및 레벨 디자인 (Map & Level Design)</h2>
+
+            <h3 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2 no-break">3.1. 맵 구조: 3라인 공성전 구조 (3-Lane Siege)</h3>
+            <p class="text-sm text-gray-400 italic mb-4 no-break">상, 중, 하 3개 라인과 중립 구역(Jungle)으로 구성된 대칭형 맵이며, 각 라인에는 방어 타워가 배치됩니다.</p>
+            
+            <div class="my-6 no-break svg-map-container mx-auto">
+                <svg viewBox="0 0 700 300" class="w-full h-auto">
+                    <rect x="0" y="0" width="700" height="300" class="jungle-rect" rx="10" ry="10"/>
+
+                    <text x="350" y="90" text-anchor="middle" class="label-text" style="font-size: 14px; fill: #ffffff; font-weight: 700;">
+                        중립 구역 (JUNGLE)
+                    </text>
+                    <text x="350" y="115" text-anchor="middle" class="label-text" style="font-size: 10px; fill: #a0a0a0;">
+                        전략 오브젝트 및 기동 동선
+                    </text>
+                    
+                    <text x="350" y="200" text-anchor="middle" class="label-text" style="font-size: 14px; fill: #ffffff; font-weight: 700;">
+                        중립 구역 (JUNGLE)
+                    </text>
+                    <text x="350" y="225" text-anchor="middle" class="label-text" style="font-size: 10px; fill: #a0a0a0;">
+                        게릴라 및 기습 동선
+                    </text>
+                    <rect x="20" y="20" width="80" height="260" class="base-rect-A" rx="5" ry="5"/>
+                    <text x="60" y="150" text-anchor="middle" class="base-text" transform="rotate(-90, 60, 150)">
+                        A팀 베이스 (BLUE TEAM)
+                    </text>
+
+                    <rect x="600" y="20" width="80" height="260" class="base-rect-B" rx="5" ry="5"/>
+                    <text x="640" y="150" text-anchor="middle" class="base-text" transform="rotate(90, 640, 150)">
+                        B팀 베이스 (RED TEAM)
+                    </text>
+
+                    
+                    <line x1="100" y1="50" x2="600" y2="50" class="lane-path"/>
+                    <text x="350" y="35" text-anchor="middle" class="lane-text">상단 라인 (Top)</text>
+                    <circle cx="170" cy="50" r="6" class="tower-point team-A"/>
+                    <circle cx="270" cy="50" r="6" class="tower-point team-A"/>
+                    <circle cx="530" cy="50" r="6" class="tower-point team-B"/>
+                    <circle cx="430" cy="50" r="6" class="tower-point team-B"/>
+
+                    <line x1="100" y1="150" x2="600" y1="150" class="lane-path"/>
+                    <text x="350" y="135" text-anchor="middle" class="lane-text">중앙 라인 (Mid)</text>
+                    <circle cx="170" cy="150" r="6" class="tower-point team-A"/>
+                    <circle cx="270" cy="150" r="6" class="tower-point team-A"/>
+                    <circle cx="530" cy="150" r="6" class="tower-point team-B"/>
+                    <circle cx="430" cy="150" r="6" class="tower-point team-B"/>
+                    
+                    <line x1="100" y1="250" x2="600" y2="250" class="lane-path"/>
+                    <text x="350" y="265" text-anchor="middle" class="lane-text">하단 라인 (Bot)</text>
+                    <circle cx="170" cy="250" r="6" class="tower-point team-A"/>
+                    <circle cx="270" cy="250" r="6" class="tower-point team-A"/>
+                    <circle cx="530" cy="250" r="6" class="tower-point team-B"/>
+                    <circle cx="430" cy="250" r="6" class="tower-point team-B"/>
+
+                    <g transform="translate(250, 270)">
+                        <rect x="0" y="0" width="280" height="25" rx="5" ry="5" style="fill: #1e1e1e; stroke: #3a3a3a;"/>
+                        <circle cx="15" cy="12" r="6" class="tower-point team-A"/>
+                        <text x="25" y="16" class="label-text" style="fill: #e0e0e0; font-weight: 400;">A팀 타워 (블루)</text>
+                        <circle cx="150" cy="12" r="6" class="tower-point team-B"/>
+                        <text x="160" y="16" class="label-text" style="fill: #e0e0e0; font-weight: 400;">B팀 타워 (레드)</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <ul class="list-disc ml-6 space-y-2 text-gray-300 no-break">
+                <li><span class="font-medium text-white">라인 (Lane):</span> NPC 병사들의 주 이동 경로. 각 라인에는 아군/적군의 방어 타워(Tower) 2개와 최종 타워 1개가 배치됨.</li>
+                <li><span class="font-medium text-white">베이스 캠프:</span> 팀의 최종 방어 시설. 내부에 리스폰 구역과 상점이 위치하며, 최종 타워의 보호를 받습니다.</li>
+            </ul>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 pt-2 border-b border-gray-700 pb-2 no-break new-page">3.2. 입체적 동선 설계 및 오브젝트</h3>
+            <p class="text-sm text-gray-400 italic mb-4 no-break">높낮이가 있는 지형과 전략 오브젝트(공중 지원 요청 시설)를 활용하여 전술적 다양성을 확보합니다.</p>
+            <div class="overflow-x-auto shadow-lg rounded-lg no-break">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead>
+                        <tr class="table-header-bg text-left text-sm uppercase tracking-wider">
+                            <th class="p-3">구역</th>
+                            <th class="p-3">역할 및 전략적 가치</th>
+                            <th class="p-3">레벨 디자인 원칙</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">라인</td>
+                            <td class="p-3">주요 전투 및 공성전 구역</td>
+                            <td class="p-3">다양한 크기의 엄폐물을 배치하여 단순한 일직선 교전이 아닌, 상황 판단에 따른 경로 선택의 재미 제공.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3">중립 구역</td>
+                            <td class="p-3">전략 오브젝트 확보 구역</td>
+                            <td class="p-3">높낮이 차이(경사로, 2층 통로)가 명확하여 사각지대와 은엄폐를 활용한 게릴라 전투 유도.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">전략 오브젝트</td>
+                            <td class="p-3 text-accent font-medium">공중 지원 요청 시설</td>
+                            <td class="p-3">점령 시 적 타워에 <span class="text-accent font-bold">공중 폭격(Air Strike)</span>을 요청하여 공성전의 판도를 뒤집을 수 있는 핵심 요소.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-4 mt-6 border border-gray-700 rounded-lg bg-[#242424] no-break">
+                <h4 class="text-xl font-semibold mb-3 text-accent">3.2.1. 3차원 입체 레이어 정의</h4>
+                <p class="text-sm text-gray-400 italic mb-2">맵은 단순한 평면이 아닌, 세 가지 수직 레이어로 구성되어 FPS의 입체적 전투를 극대화합니다.</p>
+                <ul class="list-disc ml-6 space-y-1 text-gray-300">
+                    <li><span class="font-medium text-white">지상 (Ground Layer):</span> NPC 웨이브가 이동하는 주요 공성 경로. 탱커와 딜러 간의 전면 교전이 발생.</li>
+                    <li><span class="font-medium text-white">고지대 (High Layer):</span> 저격수(Marksman)나 포격 지원 클래스(Panther)가 활용하는 은폐/엄폐 지역. 시야 장악 및 장거리 지원에 핵심적 역할.</li>
+                    <li><span class="font-medium text-white">저지대/지하 (Low Layer):</span> 암살자(Shock)가 우회 침투하거나 기습 공격을 시도하는 게릴라 동선.</li>
+                </ul>
+            </div>
+
+        </section>
+
+        <section class="p-6 card rounded-xl new-page">
+            <h2 class="text-3xl font-bold mb-6 section-header">4. 모드 진행률 및 이벤트 시나리오 (Scenario)</h2>
+
+            <h3 class="text-2xl font-bold mb-4 border-b border-gray-700 pb-2 no-break">4.1. 모드 진행률</h3>
+            <p class="text-sm text-gray-400 italic mb-4">초반 라인전, 중반 오브젝트 전투, 후반 베이스 공략의 3단계로 진행되며 레벨링을 통해 능력이 극대화됩니다.</p>
+            <div class="overflow-x-auto shadow-lg rounded-lg mb-8 no-break">
+                <table class="min-w-full divide-y divide-gray-700">
+                    <thead>
+                        <tr class="table-header-bg text-left text-sm uppercase tracking-wider">
+                            <th class="p-3">단계</th>
+                            <th class="p-3">예상 레벨</th>
+                            <th class="p-3">주요 플레이 목표</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700 text-sm">
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">초반</td>
+                            <td class="p-3">1 ~ 5Lv</td>
+                            <td class="p-3">클래스 스킬 해제 및 라인전 안정화. NPC 웨이브 관리 및 골드 획득.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150">
+                            <td class="p-3">중반</td>
+                            <td class="p-3">6 ~ 15Lv</td>
+                            <td class="p-3">전략 오브젝트(공중 지원) 확보. 적 플레이어와의 대규모 교전(한타) 유도 및 1차 방어 타워 파괴.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800 transition duration-150 bg-[#242424]">
+                            <td class="p-3 font-medium text-white">후반</td>
+                            <td class="p-3">16 ~ 20Lv</td>
+                            <td class="p-3">최종 타워 파괴 후 상대 베이스 캠프 공략 또는 최종 보스 몬스터 처치. 클래스 카드 최종 강화.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-2xl font-bold mt-8 mb-4 pt-2 border-b border-gray-700 pb-2 no-break new-page">4.2. 이벤트 시나리오: AOS 전술 훈련</h3>
+            <p class="text-sm text-gray-400 italic mb-4">신규 유저의 AOS 메커니즘 학습을 돕기 위해 클래스 성장, 라인 푸시, 전략 오브젝트 활용을 체험하는 튜토리얼입니다.</p>
+            <div class="card p-5 border border-yellow-600 rounded-xl bg-[#282000] shadow-xl no-break">
+                <p class="text-lg font-semibold mb-3 text-yellow-400">이벤트명: 격리 구역 침투 훈련 (Quarantine Zone Infiltration)</p>
+                <p class="text-gray-300 mb-4">신규 유저가 복잡한 AOS 메커니즘을 쉽게 이해하도록 설계된 튜토리얼 성격의 이벤트 시나리오입니다.</p>
+
+                <ol class="list-decimal ml-6 space-y-2 text-gray-300">
+                    <li class="font-medium text-white">클래스 및 성장: 특정 클래스(예: 블래스터)를 선택하고 NPC를 처치하여 레벨 5 달성. (성장 메커니즘 학습)</li>
+                    <li class="font-medium text-white">라인 공략: NPC 병사와 함께 전진하여 1차 방어 타워를 파괴. (라인 푸시 및 타워 공략 학습)</li>
+                    <li class="font-medium text-white">전략 활용: 중립 구역에 접근하여 공중 지원 요청을 성공적으로 실행. (맵 오브젝트의 전략적 가치 학습)</li>
+                    <li class="font-medium text-white">최종 목표: 모든 타워를 파괴하고 적 베이스 캠프를 파괴하여 훈련 완료. (최종 승리 조건 확인)</li>
+                </ol>
+            </div>
+        </section>
+
+        <footer class="text-center mt-10 pt-4 border-t border-gray-700 text-gray-500 text-sm">
+            <p>&copy; Crossfire Wave Mode Design - AOS-FPS Concept</p>
+        </footer>
+    </div>
+</body>
+</html>

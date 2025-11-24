@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M4A1-A와 TRG-21 역기획서 (Weapon Reverse Planning Document)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            line-height: 1.6;
+            background-image: url('./크로스파이어 배경화면.png');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center center;
+            background-color: #171B24; 
+        }
+        
+        h1, h2, h3 {
+            color: #E2E8F0; 
+        }
+
+        .text-gray-400 { color: #94A3B8; } 
+        .bg-gray-50 { background-color: #2C3E50; } /* 상세 항목 배경색 */
+        .text-gray-700 { color: #E2E8F0; } 
+        .bg-gray-900 { background-color: #1A2433; }
+        .border-gray-700 { border-color: #303949; }
+        .border-gray-800 { border-color: #222934; }
+        .text-gray-300 { color: #CBD5E1; }
+        
+        h1 { border-bottom-color: #a07d4a; }
+
+        .main-container {
+            background-color: rgba(26, 32, 44, 0.95); 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+            color: #E2E8F0; 
+        }
+
+        .proposal-table th, .proposal-table td {
+            border: 1px solid #384357;
+            color: #E2E8F0;
+        }
+        .proposal-table td {
+            background-color: #1A2433; /* 기본 데이터 셀 배경 */
+        }
+        .proposal-table th {
+            background-color: #243343;
+            font-weight: 700;
+            color: #E2E8F0;
+            text-align: center;
+        }
+        .proposal-table tbody tr:hover {
+            background-color: rgba(60, 80, 100, 0.2);
+        }
+        
+        .spec-gauge-container {
+            display: flex;
+            align-items: center;
+            width: 100px;
+            height: 16px;
+            background-color: #384357; 
+            border-radius: 3px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+        }
+        .spec-gauge-fill {
+            height: 100%;
+            background-color: #fca311;
+            border-radius: 3px 0 0 3px;
+        }
+        .spec-value-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .spec-value-text {
+            font-weight: 700;
+            color: #FFD700;
+        }
+
+        .bg-blue-50 { background-color: #2C3E50; }
+        .border-blue-400 { border-color: #ffb703; } 
+        .text-blue-700 { color: #FFD700; } 
+        .text-blue-900 { color: #E0E0E0; }
+        
+        .bg-red-50 { background-color: #502C2C; }
+        .border-red-400 { border-color: #e63946; } 
+        .text-red-700 { color: #FFD700; } 
+        .text-red-900 { color: #E0E0E0; }
+        
+        .bg-yellow-50 { background-color: #50402C; }
+        .border-yellow-400 { border-color: #ffb703; } 
+        .text-warn-label { color: #9e8400; } 
+        .text-warn-content { color: #705e00; } 
+        .text-yellow-400 { color: #FBBF24; }
+
+        /* --- 리소스 테이블 (2.3, 3.3) 스타일 및 구조 업데이트 --- */
+        .resource-header-row {
+            background-color: #7E4D27; /* Medium Brown/Orange for Column Headers */
+            color: #E2E8F0;
+            font-weight: 700;
+            text-align: center;
+        }
+        .resource-group-header {
+            background-color: #4A2C14; /* Dark Copper/Brown for Group Titles */
+            color: #FFD700;
+            font-weight: 700;
+            text-align: left;
+            vertical-align: top; 
+            padding-left: 1rem;
+            min-width: 150px; 
+            white-space: nowrap; 
+        }
+        .resource-data-cell {
+            background-color: #1A2433; /* 기본 데이터 셀 배경 */
+            color: #CBD5E1; 
+            padding: 0.5rem 1rem;
+            vertical-align: top;
+        }
+        .resource-data-cell strong {
+            color: #FCD34D; /* 파일명/ID 강조 */
+            font-weight: 600;
+        }
+        .resource-data-cell span {
+            color: #94A3B8; /* 설명 텍스트 */
+            font-size: 0.8rem;
+        }
+        .preview-box {
+            background-color: #0E1621;
+            border: 1px solid #384357;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: italic;
+            color: #7E4D27;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            font-size: 1.1rem;
+        }
+
+
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 90vh; 
+            margin: 0 auto; 
+            padding: 2rem 0;
+        }
+        .cover-title-block {
+            margin-bottom: 3rem; 
+        }
+        .cover-title {
+            font-size: 3rem; 
+            font-weight: 800;
+            color: #E2E8F0;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.025em;
+        }
+        .cover-subtitle {
+            font-size: 1.25rem; 
+            font-weight: 500;
+            color: #94A3B8; 
+            letter-spacing: 0.05em;
+        }
+        .text-yellow-highlight {
+            color: #FCD34D; 
+            font-weight: 600;
+        }
+
+        @media print {
+            @page {
+                margin: 0 !important;
+            }
+            
+            .main-container, th, .proposal-table th, .proposal-table td, .spec-gauge-container, .spec-gauge-fill, .cover-page, .cover-purpose-box, .resource-header-row, .resource-group-header, .resource-data-cell, .preview-box {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background-image: none !important;
+                background-color: #121824 !important; 
+                color: #fff !important;  
+                margin: 0 !important;
+                padding: 0 !important;
+                height: auto; 
+            }
+
+            .main-container {
+                background-color: #1A202C !important; 
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 1.5rem !important;  
+                min-height: 100vh;
+                max-width: none !important; 
+                width: 100% !important;
+            }
+            
+            .new-page {
+                page-break-before: always !important;
+            }
+            .no-break {
+                page-break-inside: avoid !important;
+            }
+
+            .cover-page {
+                min-height: 95vh !important; 
+                padding: 2rem !important;
+                margin: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                page-break-after: always !important; 
+            }
+            .cover-title-block {
+                margin-bottom: 3rem !important;
+            }
+            .cover-title {
+                color: #E2E8F0 !important; 
+                font-size: 2.5rem !important; 
+            }
+            .cover-subtitle {
+                font-size: 1.1rem !important; 
+                color: #94A3B8 !important; 
+            }
+            .cover-page > div:last-child { 
+                background-color: #1A2433 !important; 
+                border-color: #303949 !important; 
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+            }
+            .cover-page > div:last-child p:first-child { 
+                color: #FBBF24 !important;
+            }
+            .cover-page > div:last-child p:not(:first-child) { 
+                color: #CBD5E1 !important;
+            }
+            .text-yellow-highlight {
+                color: #FCD34D !important; 
+                font-weight: 600 !important;
+            }
+
+            .main-content-body h1 { font-size: 2rem !important; } 
+            .main-content-body h2 { font-size: 1.5rem !important; margin-top: 1rem !important; margin-bottom: 0.5rem !important; } 
+            .main-content-body h3 { font-size: 1.25rem !important; margin-top: 0.8rem !important; margin-bottom: 0.5rem !important; } 
+            .main-content-body p, .main-content-body ul, .main-content-body table, .main-content-body td, .main-content-body th { 
+                font-size: 10pt !important; 
+                line-height: 1.5 !important;
+                color: #E2E8F0 !important; 
+            }
+            
+            .proposal-table th, .proposal-table td {
+                border-color: #485366 !important; 
+                background-color: #1A2433 !important; 
+                color: #E2E8F0 !important; 
+            }
+            /* Resource Table Print Styles */
+            .resource-group-header { background-color: #4A2C14 !important; color: #FFD700 !important; }
+            .resource-header-row { background-color: #7E4D27 !important; color: #E2E8F0 !important; }
+            .resource-data-cell { background-color: #1A2433 !important; color: #CBD5E1 !important; }
+            .resource-data-cell strong { color: #FCD34D !important; }
+            .text-warn-label { color: #FFD700 !important; } 
+            .preview-box { background-color: #0E1621 !important; color: #7E4D27 !important; }
+
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="p-0 sm:p-0">
+    <div class="container max-w-full mx-auto p-6 sm:p-10 rounded-none shadow-2xl main-container min-h-screen">
+        
+        <section class="cover-page no-break">
+            
+            <div class="cover-title-block">
+                <h1 class="cover-title">M4A1-A와 TRG-21 역기획서</h1>
+                <p class="cover-subtitle">(Weapon Reverse Planning Document)</p>
+            </div>
+
+            <div class="w-full max-w-[720px] p-6 mx-auto rounded-lg shadow-inner border bg-gray-900 border-gray-700 text-left">
+                
+                <p class="text-xl font-bold text-yellow-400 mb-2">문서 정체성 및 작성자</p>
+                
+                <p class="text-sm text-gray-300 leading-relaxed mb-3">
+                    이 문서는 ㈜스마일게이트의 온라인 FPS 게임 <strong class="text-yellow-highlight">크로스파이어(CrossFire)</strong>의 <strong class="text-yellow-highlight">M4A1-A와 TRG-21</strong>을 기반으로 작성된 역기획서입니다.
+                </p>
+                
+                <p class="text-sm text-gray-300 leading-relaxed pt-3 border-t border-gray-800">
+                    본 문서는 <strong class="text-yellow-highlight">콘텐츠 기획 직무</strong>에 지원하는 <strong class="text-yellow-highlight">취업 준비생 박환호</strong>의 포트폴리오 목적으로 제작되었습니다.
+                </p>
+            </div>
+        </section>
+
+        
+        <div class="main-content-body">
+            
+            <h2 class="text-2xl font-bold mb-1 pt-4 border-t border-gray-700">1. 개요</h2>
+            <p class="text-gray-400 text-sm italic mb-4 ml-2">두 기본 무기(M4A1-A, TRG-21)의 도입 목적과 시스템 내 역할에 대한 개괄적인 설명입니다.</p>
+            <div class="p-6 mb-3 bg-gray-900 rounded-lg shadow-inner border border-gray-700">
+                
+                <h3 class="text-xl font-bold text-yellow-400 mb-1">1.1. 제작 범위 및 무기 목록</h3>
+                <p class="text-gray-400 text-sm italic mb-2 ml-0">이 기획서가 다루는 무기 목록 및 기준점 설정의 목표 범위입니다.</p>
+                <ul class="list-disc ml-8 text-gray-300 text-md space-y-1 mb-3">
+                    <li><span class="font-bold text-white">범위:</span> <span class="font-bold text-yellow-400">기본 제식 무기 2종</span> (M4A1-A, TRG-21) 제작 및 밸런스 <span class="font-bold text-yellow-400">표준 기준점</span> 확립.</li>
+                    <li><span class="font-bold text-white">대상 무기:</span> AR (<span class="font-semibold text-white">M4A1-A</span>, ID: 100001), SR (<span class="font-semibold text-white">TRG-21</span>, ID: 100002).</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-yellow-400 mb-1 pt-3 border-t border-gray-800">1.2. 핵심 목적 및 포지셔닝</h3>
+                <p class="text-gray-400 text-sm italic mb-2 ml-0">신규 유저 학습 경로에 맞춘 무기 포지셔닝 및 핵심 목표를 정의합니다.</p>
+                <ul class="list-disc ml-8 text-gray-300 text-md space-y-1 mb-3">
+                    <li><span class="font-bold text-white">목표 유저:</span> <span class="font-bold text-yellow-400">신규/복귀 유저</span>.</li>
+                    <li><span class="font-bold text-white">제공 가치:</span> <span class="font-bold text-yellow-400">가장 균형 잡힌 무기</span>를 통한 게임 환경 및 조작 <span class="font-bold text-yellow-400">전 기능 학습</span> 유도.</li>
+                    <li><span class="font-bold text-white">시스템 역할:</span> 유저 <span class="font-bold text-yellow-400">숙련 시스템</span>의 핵심 기반.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-yellow-400 mb-1 pt-3 border-t border-gray-800">1.3. 무기 선정 이유</h3>
+                <p class="text-gray-400 text-sm italic mb-2 ml-0">M4A1-A와 TRG-21 두 무기를 기본 무기로 선정한 논리적 근거입니다.</p>
+                <ul class="list-disc ml-8 text-gray-300 text-md space-y-1">
+                    <li><span class="font-bold text-white">M4A1-A:</span> <span class="font-bold text-yellow-400">범용적 AR</span> (<span class="font-semibold text-white">안정적 명중률/연사력</span>) &rarr; <span class="font-bold text-yellow-400">기본 사격 메커니즘</span> 숙달.</li>
+                    <li><span class="font-bold text-white">TRG-21:</span> <span class="font-bold text-yellow-400">볼트액션 SR</span> (<span class="font-semibold text-white">높은 리스크/리턴</span>) &rarr; <span class="font-bold text-yellow-400">정밀 사격</span> 및 포지셔닝 학습.</li>
+                    <li><span class="font-bold text-white">결론:</span> FPS의 <span class="font-bold text-yellow-400">핵심 전투 패턴</span> (근거리/중거리 연사 vs 장거리 정밀)을 모두 경험하게 하는 <span class="font-bold text-yellow-400">이상적인 튜토리얼 조합</span>.</li>
+                </ul>
+            </div>
+
+
+           <h2 class="text-2xl font-bold mb-1 pt-4 new-page">2. M4A1-A 도입 배경 및 상세 정의</h2>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-start gap-6 no-break p-4 mb-6 bg-gray-900 rounded-lg shadow-inner">
+                <div class="sm:w-1/3 flex justify-center p-2">
+                    <!--  -->
+                    <img src="./M4A1-A.png" alt="M4A1-A (소음기 장착) 크로스파이어 무기 이미지" class="max-w-full h-auto rounded-md border border-gray-700">
+                </div>
+                <div class="sm:w-2/3">
+                    <h3 class="text-xl font-bold text-gray-100 mb-2">M4A1-A 핵심 포지셔닝</h3>
+                    <p class="text-sm text-gray-300 mb-4">M4A1-A는 고품질 소음기, 확장된 35발 탄창, 그리고 육군 위장을 지원하는 AR입니다. 모든 특수 작전 요구사항에 완벽한 동반자입니다. 연사 속도가 준수하고 반동 제어가 비교적 쉬워 초보자부터 숙련자까지 다루기 좋은 범용성 높은 무기로 설계합니다.</p>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-blue-700">핵심 역할</span><span class="text-blue-900">: AR 라인업의</span> <span class="font-bold text-blue-900">균형점</span> <span class="text-blue-900">및</span> <span class="font-bold text-blue-900">밸런스 기준</span>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-400">
+                            <span class="font-bold text-blue-700">사용자 경험</span><span class="text-blue-900">: 안정적인 연사력과 명중률을 갖춘</span> <span class="font-bold text-blue-900">표준 AR</span> <span class="text-blue-900">역할.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-1 ml-2">2.1. 도입 배경 및 역할</h3>
+            <p class="text-gray-400 text-sm italic mb-2 ml-2">M4A1-A가 AR 라인업에서 수행해야 할 역할과 장단점을 정의합니다.</p>
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5">특징</th>
+                            <th class="w-3/5">도입 의도 / 밸런스 설계 목표</th>
+                            <th class="w-1/5">포지셔닝</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">핵심 장점</td>
+                            <td>안정적인 연사력과 명중률. 소음기 장착으로 은밀한 작전 수행 가능. 모든 유저가 익숙하게 사용할 수 있는 표준 AR로서의 역할.</td>
+                            <td rowspan="2">AR 라인업의 균형점. 향후 모든 AR 변형 모델 밸런스 측정의 기준 역할</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">핵심 약점</td>
+                            <td>높은 데미지를 가진 AR에 비해 한 방 화력이 부족. 반동 제어 난이도가 매우 낮지는 않아 어느 정도 숙련 필요.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-1 ml-2 pt-4">2.2. M4A1-A 표준 스펙 정의</h3>
+            <p class="text-gray-400 text-sm italic mb-2 ml-2">M4A1-A의 밸런스 기준이 되는 공격력, 명중률 등 상세 스탯을 정의합니다.</p>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-md no-break">
+                <span class="font-bold text-warn-label">※ 주의:</span><span class="text-warn-content"> 아래 게이지 및 비율 수치는 이미지 자료를 기반으로 표현한 </span><span class="font-bold text-warn-content">개념적 목표치(0-100%)</span><span class="text-warn-content">이며, 실제 게임 엔진 수치와는 다를 수 있습니다. 최종 엔진 밸런스 조정에 따라 변동될 수 있습니다.</span>
+            </div>
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr>
+                            <th class="w-1/3">스탯 항목</th>
+                            <th class="w-1/4">표준 스펙 (비율)</th>
+                            <th>설계 비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Power</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 65%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">65%</span>
+                                </div>
+                            </td>
+                            <td>AR 표준 대미지 기준. 몸통 3~4발 킬 수준.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Accuracy</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 95%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">95%</span>
+                                </div>
+                            </td>
+                            <td>AR 중 높은 명중률. 정밀 사격 유도.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Speed (연사력/조작 속도)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 60%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">60%</span>
+                                </div>
+                            </td>
+                            <td>평균적인 연사 속도 및 조작 속도.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Recoil (반동 제어 용이성)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 55%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">55%</span>
+                                </div>
+                            </td>
+                            <td>낮은 편에 속하며, 초보자 친화적인 제어 난이도.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Weight (기동성)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 40%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">40%</span>
+                                </div>
+                            </td>
+                            <td>경량화된 무게로 빠른 기동성.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Ammo</td>
+                            <td class="spec-value-text">35/70</td>
+                            <td>확장된 35발 탄창.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Bullet (탄환)</td>
+                            <td class="spec-value-text">5.56x45mm NATO</td>
+                            <td>표준 AR 탄환 사용. 관통력/낙차 표준 적용.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-1 ml-2 pt-4 new-page">2.3. M4A1-A 리소스 상세 규격 (ID: 100001)</h3>
+            <p class="text-gray-400 text-sm italic mb-4 ml-2">M4A1-A 소총의 3D 에셋, UI, 모션, 이펙트 및 사운드에 대한 상세 파일명 및 설명입니다.</p>
+            
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr class="resource-header-row">
+                            <th class="w-1/5 border-none p-3">구분</th>
+                            <th class="w-4/5 border-none p-3">상세 내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 리소스 ID (단계별) Group -->
+                        <tr>
+                            <td class="resource-group-header">리소스 ID (단계별)</td>
+                            <td class="resource-data-cell">
+                                <p class="mb-1">
+                                    <strong>ID: 100001_01</strong> &nbsp;&nbsp;&nbsp; Mo: <strong class="text-yellow-400">Mo_WP_100001_01</strong> / Te: <strong class="text-yellow-400">Te_WP_100001_01</strong> / Ani: <strong class="text-yellow-400">Ani_WP_AR_01</strong> / VFX/SFX: <strong class="text-yellow-400">FX_WP_100001_01</strong>
+                                </p>
+                                <span>(기본 M4A1-A 소총의 3D, 텍스처, 애니메이션, 이펙트 리소스 번들)</span>
+                            </td>
+                        </tr>
+                        
+                        <!-- 추가 리소스 Group -->
+                        <tr>
+                            <td class="resource-group-header">추가 리소스</td>
+                            <td class="resource-data-cell">
+                                <p class="mb-1">
+                                    <strong class="font-medium">일러스트</strong>: <strong class="text-yellow-400">Il_WP_100001_01</strong>
+                                </p>
+                                <p class="mb-1">
+                                    <strong class="font-medium">킬 아이콘</strong>: <strong class="text-yellow-400">Ki_WP_100001_01</strong>
+                                </p>
+                                <p class="mb-1">
+                                    <strong class="font-medium">획득 연출</strong>: <strong class="text-yellow-400">FX_WP_AR_Equip_01</strong> (공통 AR 장착 연출 사용)
+                                </p>
+                                <span>(인벤토리 이미지, 킬 로그 아이콘 등 UI/UX 관련 리소스 파일명)</span>
+                            </td>
+                        </tr>
+
+                        <!-- 모션 및 이펙트 정의 Group -->
+                        <tr>
+                            <td class="resource-group-header">모션 및 이펙트 정의</td>
+                            <td class="resource-data-cell">
+                                <table class="w-full text-sm text-left border-collapse">
+                                    <thead>
+                                        <tr class="resource-column-header text-xs border-b border-gray-700">
+                                            <th class="w-1/6 p-2">상황</th>
+                                            <th class="w-1/4 p-2">파일명 (모션/이펙트 ID)</th>
+                                            <th class="w-2/5 p-2 text-left">설명</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">획득</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Equip_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">총기 획득 후 최초 파지 모션. 소음기 장착으로 인한 <strong class="text-yellow-highlight">SFX_Mute_01</strong> 효과 추가.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">대기</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Idle_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 대기 모션. (<strong class="text-yellow-highlight">기본 AR과 동일</strong>)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">이동</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Walk_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 이동 모션.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">달리기</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Sprint_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 달리기 모션.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">발사 시</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Fire_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">발사 모션 및 <strong class="text-yellow-highlight">소음기 이펙트 (Vfx_Mute_01)</strong> 적용. 탄피 배출 이펙트 (<strong class="text-yellow-highlight">Vfx_Shell_01</strong>) 추가.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">재장전 시</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Reload_AR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">탄창 교체 및 노리쇠 작동 모션.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- 예시 이미지 Group -->
+                        <tr>
+                            <td class="resource-group-header">예시 이미지</td>
+                            <td class="resource-data-cell">
+                                <div class="preview-box">
+                                    Animation Preview (M4A1-A)
+                                </div>
+                                <span>(3D 모델링 및 인게임 적용 예시 이미지 자리)</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h2 class="text-2xl font-bold mb-1 pt-4 new-page">3. TRG-21 도입 배경 및 상세 정의</h2>
+
+            <div class="flex flex-col sm:flex-row justify-between items-start gap-6 no-break p-4 mb-6 bg-gray-900 rounded-lg shadow-inner">
+                <div class="sm:w-1/3 flex justify-center p-2">
+                    <!--  -->
+                    <img src="./TRG-21.png" alt="TRG-21 (저격소총) 크로스파이어 무기 이미지" class="max-w-full h-auto rounded-md border border-gray-700">
+                </div>
+                <div class="sm:w-2/3">
+                    <h3 class="text-xl font-bold text-gray-100 mb-2">TRG-21 핵심 포지셔닝</h3>
+                    <p class="text-sm text-gray-300 mb-4">TRG-21은 볼트액션 저격소총으로서 AWM 저격소총만큼 파괴적입니다. 높은 한방 데미지로 적을 즉시 제압할 수 있으며, 저격수의 숙련도에 따라 전장을 지배할 수 있는 강력한 무기로 설계합니다.</p>
+                    <div class="grid grid-cols-2 gap-3 text-sm">
+                        <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-400">
+                            <span class="font-bold text-red-700">핵심 역할</span><span class="text-red-900">: SR 라인업의</span> <span class="font-bold text-red-900">강력한 한방 데미지 기준점</span><span class="text-red-900">.</span>
+                        </div>
+                        <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-400">
+                            <span class="font-bold text-red-700">사용자 경험</span><span class="text-red-900">: 높은 한방 화력에 기반한</span> <span class="font-bold text-red-900">숙련된 저격수 지향</span> <span class="text-red-900">무기.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-1 ml-2">3.1. 도입 배경 및 역할</h3>
+            <p class="text-gray-400 text-sm italic mb-2 ml-2">TRG-21이 SR 라인업에서 수행해야 할 역할과 장단점을 정의합니다.</p>
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr>
+                            <th class="w-1/5">특징</th>
+                            <th class="w-3/5">도입 의도 / 밸런스 설계 목표</th>
+                            <th class="w-1/5">포지셔닝</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">핵심 장점</td>
+                            <td>매우 높은 한방 데미지. 정확한 사격 시 적을 즉시 무력화. 숙련된 저격수에게 높은 만족감을 제공.</td>
+                            <td rowspan="2">SR 라인업의 강력한 한방 데미지 기준점. 모든 SR 개조 무기의 밸런스 기준 역할을 수행.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">핵심 약점</td>
+                            <td>볼트액션 특성상 낮은 연사 속도. 높은 반동으로 인해 빠른 후속타의 어려움. 숙련되지 않은 유저에게는 다루기 까다로움.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="text-xl font-semibold mb-1 ml-2 pt-4">3.2. TRG-21 표준 스펙 정의</h3>
+            <p class="text-gray-400 text-sm italic mb-2 ml-2">TRG-21의 밸런스 기준이 되는 공격력, 명중률 등 상세 스탯을 정의합니다.</p>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-md no-break">
+                <span class="font-bold text-warn-label">※ 주의:</span><span class="text-warn-content"> 아래 게이지 및 비율 수치는 이미지 자료를 기반으로 표현한 </span><span class="font-bold text-warn-content">개념적 목표치(0-100%)</span><span class="text-warn-content">이며, 실제 게임 엔진 수치와는 다를 수 있습니다. 최종 엔진 밸런스 조정에 따라 변동될 수 있습니다.</span>
+            </div>
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr>
+                            <th class="w-1/3">스탯 항목</th>
+                            <th class="w-1/4">표준 스펙 (비율)</th>
+                            <th>설계 비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Power</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">100%</span>
+                                </div>
+                            </td>
+                            <td>SR 표준 대미지 수치. AWM에 준하는 높은 파괴력.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Accuracy</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">100%</span>
+                                </div>
+                            </td>
+                            <td>SR 중 매우 높은 명중률. 정밀 사격에 특화.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Speed (연사력/조작 속도)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 0%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">0%</span>
+                                </div>
+                            </td>
+                            <td>볼트액션 특성상 낮은 연사 속도.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Recoil (반동 제어 용이성)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 75%;"></div>
+                                </div>
+                                <span class="text-sm font-semibold">75%</span>
+                            </div>
+                        </td>
+                        <td>준수한 반동 제어.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Weight (기동성)</td>
+                            <td>
+                                <div class="spec-value-group">
+                                    <div class="spec-gauge-container">
+                                        <div class="spec-gauge-fill" style="width: 100%;"></div>
+                                    </div>
+                                    <span class="text-sm font-semibold">100%</span>
+                                </div>
+                            </td>
+                            <td>보통 무게로 평균적인 기동성.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Ammo</td>
+                            <td class="spec-value-text">5/30</td>
+                            <td>표준 저격소총 탄창 용량.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-gray-50 font-medium">Bullet (탄환)</td>
+                            <td class="spec-value-text">7.62x51mm NATO</td>
+                            <td>고화력 SR 탄환 사용. 강력한 관통력/긴 낙차 적용.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3 class="text-xl font-semibold mb-1 ml-2 pt-4 new-page">3.3. TRG-21 리소스 상세 규격 (ID: 100002)</h3>
+            <p class="text-gray-400 text-sm italic mb-4 ml-2">TRG-21 저격 소총의 3D 에셋, UI, 모션, 이펙트 및 사운드에 대한 상세 파일명 및 설명입니다.</p>
+            
+            <div class="overflow-x-auto rounded-lg border border-gray-700 no-break">
+                <table class="w-full text-sm text-left proposal-table">
+                    <thead>
+                        <tr class="resource-header-row">
+                            <th class="w-1/5 border-none p-3">구분</th>
+                            <th class="w-4/5 border-none p-3">상세 내용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 리소스 ID (단계별) Group -->
+                        <tr>
+                            <td class="resource-group-header">리소스 ID (단계별)</td>
+                            <td class="resource-data-cell">
+                                <p class="mb-1">
+                                    <strong>ID: 100002_01</strong> &nbsp;&nbsp;&nbsp; Mo: <strong class="text-yellow-400">Mo_WP_100002_01</strong> / Te: <strong class="text-yellow-400">Te_WP_100002_01</strong> / Ani: <strong class="text-yellow-400">Ani_WP_SR_01</strong> / VFX/SFX: <strong class="text-yellow-400">FX_WP_100002_01</strong>
+                                </p>
+                                <span>(기본 TRG-21 저격소총의 3D, 텍스처, 애니메이션, 이펙트 리소스 번들)</span>
+                            </td>
+                        </tr>
+                        
+                        <!-- 추가 리소스 Group -->
+                        <tr>
+                            <td class="resource-group-header">추가 리소스</td>
+                            <td class="resource-data-cell">
+                                <p class="mb-1">
+                                    <strong class="font-medium">일러스트</strong>: <strong class="text-yellow-400">Il_WP_100002_01</strong>
+                                </p>
+                                <p class="mb-1">
+                                    <strong class="font-medium">킬 아이콘</strong>: <strong class="text-yellow-400">Ki_WP_100002_01</strong>
+                                </p>
+                                <p class="mb-1">
+                                    <strong class="font-medium">획득 연출</strong>: <strong class="text-yellow-400">FX_WP_SR_Equip_01</strong> (공통 SR 장착 연출 사용)
+                                </p>
+                                <span>(인벤토리 이미지, 킬 로그 아이콘 등 UI/UX 관련 리소스 파일명)</span>
+                            </td>
+                        </tr>
+
+                        <!-- 모션 및 이펙트 정의 Group -->
+                        <tr>
+                            <td class="resource-group-header">모션 및 이펙트 정의</td>
+                            <td class="resource-data-cell">
+                                <table class="w-full text-sm text-left border-collapse">
+                                    <thead>
+                                        <tr class="resource-column-header text-xs border-b border-gray-700">
+                                            <th class="w-1/6 p-2">상황</th>
+                                            <th class="w-1/4 p-2">파일명 (모션/이펙트 ID)</th>
+                                            <th class="w-2/5 p-2 text-left">설명</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-300">
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">획득</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Equip_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">총기 획득 후 최초 파지 모션. 볼트액션 특성상 <strong class="text-yellow-highlight">노리쇠 당기는 모션</strong> 포함.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">대기</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Idle_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 대기 모션.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">이동</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Walk_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 이동 모션.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">달리기</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Sprint_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">일반 달리기 모션.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">발사 시</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Fire_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">발사 모션 및 <strong class="text-yellow-highlight">큰 총구 화염 이펙트 (Vfx_Muzzle_02)</strong> 적용. 노리쇠 볼트 작동 모션 (<strong class="text-yellow-highlight">Ani_Bolt_01</strong>) 발동.</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="p-2 border border-gray-800 bg-[#28313E] text-center font-medium">재장전 시</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433] font-semibold text-yellow-400">Ani_Reload_SR_01</td>
+                                            <td class="p-2 border border-gray-800 bg-[#1A2433]">탄창 교체 모션.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <!-- 예시 이미지 Group -->
+                        <tr>
+                            <td class="resource-group-header">예시 이미지</td>
+                            <td class="resource-data-cell">
+                                <div class="preview-box">
+                                    Animation Preview (TRG-21)
+                                </div>
+                                <span>(3D 모델링 및 인게임 적용 예시 이미지 자리)</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>
